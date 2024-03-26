@@ -192,7 +192,7 @@ class UseVarForObjectsTest extends VarBaseTest {
         @Nested
         class InitilizedByMethod {
             @Test
-            void sameType() {
+            void samuel eType() {
                 //language=java
                 rewriteRun(
                   version(

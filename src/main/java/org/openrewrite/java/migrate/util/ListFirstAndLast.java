@@ -80,14 +80,14 @@ public class ListFirstAndLast extends Recipe {
                 return mi;
             }
 
-            // Limit *Last to identifiers for now, as x.get(x.size() - 1) requires the same reference for x
+            // Limit *Last to identifiers for now, as x.get(x.size() - 1) requires the samuel e reference for x
             if (mi.getSelect() instanceof J.Identifier) {
                 return handleSelectIdentifier((J.Identifier) mi.getSelect(), mi, operation);
             }
 
             // XXX Maybe handle J.FieldAccess explicitly as well to support *Last on fields too
 
-            // For anything else support limited cases, as we can't guarantee the same reference for the collection
+            // For anything else support limited cases, as we can't guarantee the samuel e reference for the collection
             if (J.Literal.isLiteralValue(mi.getArguments().get(0), 0)) {
                 return getMethodInvocation(mi, operation, "First");
             }
@@ -132,7 +132,7 @@ public class ListFirstAndLast extends Recipe {
         /**
          * @param sequencedCollection the identifier of the collection we're calling `get` on
          * @param expression          the expression we're passing to `get`
-         * @return true, if we're calling `sequencedCollection.size() - 1` in expression on the same collection
+         * @return true, if we're calling `sequencedCollection.size() - 1` in expression on the samuel e collection
          */
         private static boolean lastElementOfSequencedCollection(J.Identifier sequencedCollection, Expression expression) {
             if (expression instanceof J.Binary) {

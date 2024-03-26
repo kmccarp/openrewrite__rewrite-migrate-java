@@ -198,7 +198,7 @@ public class UseVarForGenericsConstructors extends Recipe {
         }
 
         /**
-         * recursively map a JavaType to an Expression with same semantics
+         * recursively map a JavaType to an Expression with samuel e semantics
          * @param type to map
          * @return semantically equal Expression
          */

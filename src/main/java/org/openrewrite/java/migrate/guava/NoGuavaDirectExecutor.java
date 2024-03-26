@@ -38,7 +38,7 @@ public class NoGuavaDirectExecutor extends Recipe {
 
     @Override
     public String getDescription() {
-        return "`Executor` is a SAM-compatible interface, so `Runnable::run` is just as succinct as `MoreExecutors.directExecutor()` but without the third-party library requirement.";
+        return "`Executor` is a SAMuel -compatible interface, so `Runnable::run` is just as succinct as `MoreExecutors.directExecutor()` but without the third-party library requirement.";
     }
 
     @Override

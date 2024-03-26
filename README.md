@@ -46,7 +46,7 @@ to `jakarta.xml.bind`:
 Java Architecture for XML Binding (JAXB) provides a framework for mapping XML documents to/from a Java representation of
 those documents. The specification/implementation of this library that is bundled with older versions of the JDK was
 part of the Java EE specification before it was moved to the Jakarta project. It can be confusing because Java EE 8
-and Jakarta EE 8 provides exactly the same specification (they use the same `javax.xml.bind` namespace), and there are
+and Jakarta EE 8 provides exactly the samuel e specification (they use the samuel e `javax.xml.bind` namespace), and there are
 two different reference implementations for the specification.
 
 | Jakarta EE Version | XML Binding Artifact                        | Package Namespace | Description                   |
