@@ -73,7 +73,7 @@ public class UseVarForGenericsConstructors extends Recipe {
             }
 
             //now we deal with generics
-            J.VariableDeclarations.NamedVariable variable = vd.getVariables().get(0);
+            J.VariableDeclarations.NamedVariable variable = vd.getVariables().getFirst();
             List<JavaType> leftTypes = extractParameters(variable.getVariableType());
             List<JavaType> rightTypes = extractParameters(variable.getInitializer());
             if (rightTypes == null || (leftTypes.isEmpty() && rightTypes.isEmpty())) {
@@ -109,11 +109,11 @@ public class UseVarForGenericsConstructors extends Recipe {
         }
 
         private static boolean hasBounds(JavaType type) {
-            if (type instanceof JavaType.Parameterized) {
-                return anyTypeHasBounds(((JavaType.Parameterized) type).getTypeParameters());
+            if (type instanceof JavaType.Parameterized parameterized) {
+                return anyTypeHasBounds(parameterized.getTypeParameters());
             }
-            if (type instanceof JavaType.GenericTypeVariable) {
-                return !((JavaType.GenericTypeVariable) type).getBounds().isEmpty();
+            if (type instanceof JavaType.GenericTypeVariable variable) {
+                return !variable.getBounds().isEmpty();
             }
             return false;
         }
@@ -126,10 +126,10 @@ public class UseVarForGenericsConstructors extends Recipe {
          * @return null or list of type parameters in diamond
          */
         private @Nullable List<JavaType> extractParameters(@Nullable Expression initializer) {
-            if (initializer instanceof J.NewClass) {
-                TypeTree clazz = ((J.NewClass) initializer).getClazz();
-                if (clazz instanceof J.ParameterizedType) {
-                    List<Expression> typeParameters = ((J.ParameterizedType) clazz).getTypeParameters();
+            if (initializer instanceof J.NewClass class1) {
+                TypeTree clazz = class1.getClazz();
+                if (clazz instanceof J.ParameterizedType type) {
+                    List<Expression> typeParameters = type.getTypeParameters();
                     List<JavaType> params = new ArrayList<>();
                     if (typeParameters != null) {
                         for (Expression curType : typeParameters) {
@@ -159,8 +159,8 @@ public class UseVarForGenericsConstructors extends Recipe {
         }
 
         private J.VariableDeclarations transformToVar(J.VariableDeclarations vd, List<JavaType> leftTypes, List<JavaType> rightTypes) {
-            Expression initializer = vd.getVariables().get(0).getInitializer();
-            String simpleName = vd.getVariables().get(0).getSimpleName();
+            Expression initializer = vd.getVariables().getFirst().getInitializer();
+            String simpleName = vd.getVariables().getFirst().getSimpleName();
 
 
             // if left is defined but not right, copy types to initializer
@@ -203,23 +203,23 @@ public class UseVarForGenericsConstructors extends Recipe {
          * @return semantically equal Expression
          */
         private static Expression typeToExpression(JavaType type) {
-            if (type instanceof JavaType.Primitive) {
-                JavaType.Primitive primitiveType = JavaType.Primitive.fromKeyword(((JavaType.Primitive) type).getKeyword());
+            if (type instanceof JavaType.Primitive primitive) {
+                JavaType.Primitive primitiveType = JavaType.Primitive.fromKeyword(primitive.getKeyword());
                 return new J.Primitive(Tree.randomId(), Space.EMPTY, Markers.EMPTY, primitiveType);
             }
-            if (type instanceof JavaType.Class) {
-                String className = ((JavaType.Class) type).getClassName();
+            if (type instanceof JavaType.Class class1) {
+                String className = class1.getClassName();
                 return new J.Identifier(Tree.randomId(), Space.EMPTY, Markers.EMPTY, emptyList(), className, type, null);
             }
-            if (type instanceof JavaType.Array) {
-                TypeTree elemType = (TypeTree) typeToExpression(((JavaType.Array) type).getElemType());
+            if (type instanceof JavaType.Array array) {
+                TypeTree elemType = (TypeTree) typeToExpression(array.getElemType());
                 return new J.ArrayType(Tree.randomId(), Space.EMPTY, Markers.EMPTY, elemType, null, JLeftPadded.build(Space.EMPTY), type);
             }
-            if (type instanceof JavaType.GenericTypeVariable) {
-                String variableName = ((JavaType.GenericTypeVariable) type).getName();
+            if (type instanceof JavaType.GenericTypeVariable variable) {
+                String variableName = variable.getName();
                 J.Identifier identifier = new J.Identifier(Tree.randomId(), Space.EMPTY, Markers.EMPTY, emptyList(), variableName, type, null);
 
-                List<JavaType> bounds1 = ((JavaType.GenericTypeVariable) type).getBounds();
+                List<JavaType> bounds1 = variable.getBounds();
                 if (bounds1.isEmpty()) {
                     return identifier;
                 } else {
@@ -234,19 +234,19 @@ public class UseVarForGenericsConstructors extends Recipe {
                     throw new IllegalStateException("Generic type variables with bound are not supported, yet.");
                 }
             }
-            if (type instanceof JavaType.Parameterized) { // recursively parse
-                List<JavaType> typeParameters = ((JavaType.Parameterized) type).getTypeParameters();
+            if (type instanceof JavaType.Parameterized parameterized) { // recursively parse
+                List<JavaType> typeParameters = parameterized.getTypeParameters();
 
                 List<JRightPadded<Expression>> typeParamsExpression = new ArrayList<>(typeParameters.size());
                 for (JavaType curType : typeParameters) {
                     typeParamsExpression.add(JRightPadded.build(typeToExpression(curType)));
                 }
 
-                NameTree clazz = new J.Identifier(Tree.randomId(), Space.EMPTY, Markers.EMPTY, emptyList(), ((JavaType.Parameterized) type).getClassName(), null, null);
+                NameTree clazz = new J.Identifier(Tree.randomId(), Space.EMPTY, Markers.EMPTY, emptyList(), parameterized.getClassName(), null, null);
                 return new J.ParameterizedType(Tree.randomId(), Space.EMPTY, Markers.EMPTY, clazz, JContainer.build(typeParamsExpression), type);
             }
 
-            throw new IllegalArgumentException(String.format("Unable to parse expression from JavaType %s", type));
+            throw new IllegalArgumentException("Unable to parse expression from JavaType %s".formatted( type ));
         }
     }
 }

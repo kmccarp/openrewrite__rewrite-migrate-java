@@ -75,8 +75,7 @@ public class FindDtoOverfetching extends Recipe {
 
                         outer:
                         for (Statement parameter : methodDeclaration.getParameters()) {
-                            if (parameter instanceof J.VariableDeclarations) {
-                                J.VariableDeclarations variableDeclarations = (J.VariableDeclarations) parameter;
+                            if (parameter instanceof J.VariableDeclarations variableDeclarations) {
                                 for (J.VariableDeclarations.NamedVariable variable : variableDeclarations.getVariables()) {
                                     if (variable.getName().getSimpleName().equals(((J.Identifier) method.getSelect()).getSimpleName())) {
                                         methodCursor.computeMessageIfAbsent("dtoDataUses", k -> new TreeSet<>())

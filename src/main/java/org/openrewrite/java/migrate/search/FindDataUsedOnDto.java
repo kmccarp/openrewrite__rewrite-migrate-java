@@ -43,8 +43,10 @@ public class FindDataUsedOnDto extends Recipe {
 
     @Override
     public String getDescription() {
-        return "Find data elements used on DTOs. This is useful to provide " +
-               "information where data over-fetching may be a problem.";
+        return """
+               Find data elements used on DTOs. This is useful to provide \
+               information where data over-fetching may be a problem.\
+               """;
     }
 
     @Override

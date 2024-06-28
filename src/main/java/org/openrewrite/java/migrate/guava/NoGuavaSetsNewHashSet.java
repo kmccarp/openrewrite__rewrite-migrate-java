@@ -56,18 +56,18 @@ public class NoGuavaSetsNewHashSet extends Recipe {
                 if (NEW_HASH_SET.matches(method)) {
                     maybeRemoveImport("com.google.common.collect.Sets");
                     maybeAddImport("java.util.HashSet");
-                    if (method.getArguments().isEmpty() || method.getArguments().get(0) instanceof J.Empty) {
+                    if (method.getArguments().isEmpty() || method.getArguments().getFirst() instanceof J.Empty) {
                         return JavaTemplate.builder("new HashSet<>()")
                                 .contextSensitive()
                                 .imports("java.util.HashSet")
                                 .build()
                                 .apply(getCursor(), method.getCoordinates().replace());
-                    } else if (method.getArguments().size() == 1 && TypeUtils.isAssignableTo("java.util.Collection", method.getArguments().get(0).getType())) {
+                    } else if (method.getArguments().size() == 1 && TypeUtils.isAssignableTo("java.util.Collection", method.getArguments().getFirst().getType())) {
                         return JavaTemplate.builder("new HashSet<>(#{any(java.util.Collection)})")
                                 .contextSensitive()
                                 .imports("java.util.HashSet")
                                 .build()
-                                .apply(getCursor(), method.getCoordinates().replace(), method.getArguments().get(0));
+                                .apply(getCursor(), method.getCoordinates().replace(), method.getArguments().getFirst());
                     } else {
                         maybeAddImport("java.util.Arrays");
                         JavaTemplate newHashSetVarargs = JavaTemplate.builder("new HashSet<>(Arrays.asList(" + method.getArguments().stream().map(a -> "#{any()}").collect(Collectors.joining(",")) + "))")

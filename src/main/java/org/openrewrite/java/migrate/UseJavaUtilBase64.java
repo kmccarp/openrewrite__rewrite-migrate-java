@@ -45,8 +45,10 @@ public class UseJavaUtilBase64 extends Recipe {
     @Override
     public String getDescription() {
         //language=markdown
-        return "Prefer `java.util.Base64` instead of using `sun.misc` in Java 8 or higher. `sun.misc` is not exported " +
-               "by the Java module system and accessing this class will result in a warning in Java 11 and an error in Java 17.";
+        return """
+               Prefer `java.util.Base64` instead of using `sun.misc` in Java 8 or higher. `sun.misc` is not exported \
+               by the Java module system and accessing this class will result in a warning in Java 11 and an error in Java 17.\
+               """;
     }
 
     public UseJavaUtilBase64(String sunPackage, boolean useMimeCoder) {
@@ -105,12 +107,12 @@ public class UseJavaUtilBase64 extends Recipe {
                 J.MethodInvocation m = (J.MethodInvocation) super.visitMethodInvocation(method, ctx);
                 if (base64EncodeMethod.matches(m) &&
                     ("encode".equals(method.getSimpleName()) || "encodeBuffer".equals(method.getSimpleName()))) {
-                    m = encodeToString.apply(updateCursor(m), m.getCoordinates().replace(), method.getArguments().get(0));
+                    m = encodeToString.apply(updateCursor(m), m.getCoordinates().replace(), method.getArguments().getFirst());
                     if (method.getSelect() instanceof J.Identifier) {
                         m = m.withSelect(method.getSelect());
                     }
                 } else if (base64DecodeBuffer.matches(method)) {
-                    m = decode.apply(updateCursor(m), m.getCoordinates().replace(), method.getArguments().get(0));
+                    m = decode.apply(updateCursor(m), m.getCoordinates().replace(), method.getArguments().getFirst());
                     if (method.getSelect() instanceof J.Identifier) {
                         m = m.withSelect(method.getSelect());
                     }

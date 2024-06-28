@@ -66,8 +66,8 @@ public class AddJDeprScanPlugin extends Recipe {
                     "org.apache.maven.plugins",
                     "maven-jdeprscan-plugin",
                     "3.0.0-alpha-1",
-                    String.format("<configuration>%n   <release>%s</release>%n</configuration>",
-                            StringUtils.isNullOrEmpty(getRelease()) ? "11" : getRelease()),
+                    "<configuration>%n   <release>%s</release>%n</configuration>".formatted(
+                            StringUtils.isNullOrEmpty( getRelease() ) ? "11" : getRelease() ),
                     null,
                     null,
                     null).getVisitor());

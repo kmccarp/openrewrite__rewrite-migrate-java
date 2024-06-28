@@ -51,13 +51,12 @@ public class BeanValidationMessages extends Recipe {
                             return a;
                         }
                         return a.withArguments(ListUtils.map(a.getArguments(), arg -> {
-                            if (arg instanceof J.Assignment) {
-                                J.Assignment as = (J.Assignment) arg;
+                            if (arg instanceof J.Assignment as) {
                                 if (as.getAssignment() instanceof J.Literal) {
                                     return as.withAssignment(maybeReplaceLiteralValue((J.Literal) as.getAssignment()));
                                 }
-                            } else if (arg instanceof J.Literal) {
-                                return maybeReplaceLiteralValue((J.Literal) arg);
+                            } else if (arg instanceof J.Literal literal) {
+                                return maybeReplaceLiteralValue(literal);
                             }
                             return arg;
                         }));

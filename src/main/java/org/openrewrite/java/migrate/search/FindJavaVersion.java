@@ -51,7 +51,7 @@ public class FindJavaVersion extends Recipe {
             @Override
             public J visitCompilationUnit(J.CompilationUnit cu, ExecutionContext ctx) {
                 Optional<JavaVersion> maybeJv = cu.getMarkers().findFirst(JavaVersion.class);
-                if(!maybeJv.isPresent()) {
+                if(maybeJv.isEmpty()) {
                     return cu;
                 }
                 JavaVersion jv = maybeJv.get();

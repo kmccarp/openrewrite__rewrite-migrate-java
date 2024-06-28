@@ -50,7 +50,7 @@ public class UpdateGetRealPath extends Recipe {
                             .apply(updateCursor(method),
                                     method.getCoordinates().replace(),
                                     method.getSelect(),
-                                    method.getArguments().get(0));
+                                    method.getArguments().getFirst());
                 }
                 return method;
             }

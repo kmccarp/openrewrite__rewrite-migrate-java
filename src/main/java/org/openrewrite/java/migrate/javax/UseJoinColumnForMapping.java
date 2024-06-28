@@ -39,10 +39,12 @@ public class UseJoinColumnForMapping extends Recipe {
 
     @Override
     public String getDescription() {
-        return "In OpenJPA, when a relationship attribute has either a `@OneToOne` or a `@ManyToOne` annotation with a " +
-               "`@Column` annotation, the `@Column` annotation is treated as a `@JoinColumn` annotation. EclipseLink " +
-               "throws an exception that indicates that the entity class must use `@JoinColumn` instead of `@Column` " +
-               "to map a relationship attribute.";
+        return """
+               In OpenJPA, when a relationship attribute has either a `@OneToOne` or a `@ManyToOne` annotation with a \
+               `@Column` annotation, the `@Column` annotation is treated as a `@JoinColumn` annotation. EclipseLink \
+               throws an exception that indicates that the entity class must use `@JoinColumn` instead of `@Column` \
+               to map a relationship attribute.\
+               """;
     }
 
     @Override

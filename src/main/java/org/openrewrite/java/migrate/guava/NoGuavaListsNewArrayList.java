@@ -77,16 +77,16 @@ public class NoGuavaListsNewArrayList extends Recipe {
                     maybeAddImport("java.util.ArrayList");
                     return newArrayList.apply(getCursor(), method.getCoordinates().replace());
                 } else if (NEW_ARRAY_LIST_ITERABLE.matches(method) && method.getArguments().size() == 1 &&
-                        TypeUtils.isAssignableTo("java.util.Collection", method.getArguments().get(0).getType())) {
+                        TypeUtils.isAssignableTo("java.util.Collection", method.getArguments().getFirst().getType())) {
                     maybeRemoveImport("com.google.common.collect.Lists");
                     maybeAddImport("java.util.ArrayList");
                     return newArrayListCollection.apply(getCursor(), method.getCoordinates().replace(),
-                            method.getArguments().get(0));
+                            method.getArguments().getFirst());
                 } else if (NEW_ARRAY_LIST_CAPACITY.matches(method)) {
                     maybeRemoveImport("com.google.common.collect.Lists");
                     maybeAddImport("java.util.ArrayList");
                     return newArrayListCapacity.apply(getCursor(), method.getCoordinates().replace(),
-                            method.getArguments().get(0));
+                            method.getArguments().getFirst());
                 }
                 return super.visitMethodInvocation(method, ctx);
             }

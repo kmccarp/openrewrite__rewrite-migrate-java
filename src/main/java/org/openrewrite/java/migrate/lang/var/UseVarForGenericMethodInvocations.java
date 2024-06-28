@@ -38,8 +38,10 @@ public class UseVarForGenericMethodInvocations extends Recipe {
     @Override
     public String getDescription() {
         //language=markdown
-        return "Apply `var` to variables initialized by invocations of Generic Methods. " +
-               "This recipe ignores generic factory methods without parameters, because open rewrite cannot handle them correctly ATM.";
+        return """
+               Apply `var` to variables initialized by invocations of Generic Methods. \
+               This recipe ignores generic factory methods without parameters, because open rewrite cannot handle them correctly ATM.\
+               """;
     }
 
     @Override
@@ -71,7 +73,7 @@ public class UseVarForGenericMethodInvocations extends Recipe {
             }
 
             //now we deal with generics, check for method invocations
-            Expression initializer = vd.getVariables().get(0).getInitializer();
+            Expression initializer = vd.getVariables().getFirst().getInitializer();
             boolean isMethodInvocation = initializer != null && initializer.unwrap() instanceof J.MethodInvocation;
             if (!isMethodInvocation) {
                 return vd;
@@ -102,8 +104,8 @@ public class UseVarForGenericMethodInvocations extends Recipe {
         }
 
         private J.VariableDeclarations transformToVar(J.VariableDeclarations vd, List<JavaType> leftTypes, List<JavaType> rightTypes) {
-            Expression initializer = vd.getVariables().get(0).getInitializer();
-            String simpleName = vd.getVariables().get(0).getSimpleName();
+            Expression initializer = vd.getVariables().getFirst().getInitializer();
+            String simpleName = vd.getVariables().getFirst().getSimpleName();
 
             // if left is defined but not right, copy types to initializer
             if (rightTypes.isEmpty() && !leftTypes.isEmpty()) {

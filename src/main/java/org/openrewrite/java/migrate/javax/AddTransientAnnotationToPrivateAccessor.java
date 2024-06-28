@@ -44,10 +44,12 @@ public class AddTransientAnnotationToPrivateAccessor extends Recipe {
 
     @Override
     public String getDescription() {
-        return "According to the JPA 2.1 specification, when property access is used, the property accessor methods " +
-               "must be public or protected. OpenJPA ignores any private accessor methods, whereas EclipseLink persists " +
-               "those attributes. To ignore private accessor methods in EclipseLink, the methods must have a " +
-               "`@Transient` annotation.";
+        return """
+               According to the JPA 2.1 specification, when property access is used, the property accessor methods \
+               must be public or protected. OpenJPA ignores any private accessor methods, whereas EclipseLink persists \
+               those attributes. To ignore private accessor methods in EclipseLink, the methods must have a \
+               `@Transient` annotation.\
+               """;
     }
 
 
@@ -88,7 +90,7 @@ public class AddTransientAnnotationToPrivateAccessor extends Recipe {
 
                     private boolean isPrivateAccessorMethodWithoutTransientAnnotation(J.MethodDeclaration method) {
                         return method.hasModifier(J.Modifier.Type.Private)
-                               && method.getParameters().get(0) instanceof J.Empty
+                               && method.getParameters().getFirst() instanceof J.Empty
                                && method.getReturnTypeExpression().getType() != JavaType.Primitive.Void
                                && FindAnnotations.find(method, "javax.persistence.Transient").isEmpty()
                                && methodReturnsFieldFromClass(method);
@@ -105,11 +107,11 @@ public class AddTransientAnnotationToPrivateAccessor extends Recipe {
                             public J.Return visitReturn(J.Return ret, List<JavaType.Variable> returnedVars) {
                                 Expression expression = ret.getExpression();
                                 JavaType.Variable returnedVar;
-                                if (expression instanceof J.FieldAccess) { // ie: return this.field;
-                                    returnedVar = ((J.FieldAccess) expression).getName().getFieldType();
+                                if (expression instanceof J.FieldAccess access) { // ie: return this.field;
+                                    returnedVar = access.getName().getFieldType();
                                     returnedVars.add(returnedVar);
-                                } else if (expression instanceof J.Identifier) { // ie: return field;
-                                    returnedVar = ((J.Identifier) expression).getFieldType();
+                                } else if (expression instanceof J.Identifier identifier) { // ie: return field;
+                                    returnedVar = identifier.getFieldType();
                                     returnedVars.add(returnedVar);
                                 } // last case should be null: do nothing and continue
                                 return super.visitReturn(ret, returnedVars);

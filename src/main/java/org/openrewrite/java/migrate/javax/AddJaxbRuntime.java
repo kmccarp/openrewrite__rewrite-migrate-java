@@ -67,11 +67,13 @@ public class AddJaxbRuntime extends ScanningRecipe<AtomicBoolean> {
 
     @Override
     public String getDescription() {
-        return "Update build files to use the latest JAXB runtime from Jakarta EE 8 to maintain compatibility with " +
-               "Java version 11 or greater. The recipe will add a JAXB run-time, in Gradle " +
-               "`compileOnly`+`testImplementation` and Maven `provided` scope, to any project that has a transitive " +
-               "dependency on the JAXB API. **The resulting dependencies still use the `javax` namespace, despite " +
-               "the move to the Jakarta artifact**.";
+        return """
+               Update build files to use the latest JAXB runtime from Jakarta EE 8 to maintain compatibility with \
+               Java version 11 or greater. The recipe will add a JAXB run-time, in Gradle \
+               `compileOnly`+`testImplementation` and Maven `provided` scope, to any project that has a transitive \
+               dependency on the JAXB API. **The resulting dependencies still use the `javax` namespace, despite \
+               the move to the Jakarta artifact**.\
+               """;
     }
 
     @Override
@@ -141,7 +143,7 @@ public class AddJaxbRuntime extends ScanningRecipe<AtomicBoolean> {
                     }
 
                     Optional<GradleProject> maybeGp = g.getMarkers().findFirst(GradleProject.class);
-                    if (!maybeGp.isPresent()) {
+                    if (maybeGp.isEmpty()) {
                         return g;
                     }
 

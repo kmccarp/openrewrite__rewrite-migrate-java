@@ -59,15 +59,15 @@ final class DeclarationCheck {
             return false;
         }
 
-        Expression initializer = vd.getVariables().get(0).getInitializer();
+        Expression initializer = vd.getVariables().getFirst().getInitializer();
         boolean isDeclarationOnly = initializer == null;
         if (isDeclarationOnly) {
             return false;
         }
 
         initializer = initializer.unwrap();
-        boolean isNullAssigment = initializer instanceof J.Literal && ((J.Literal) initializer).getValue() == null;
-        boolean alreadyUseVar = typeExpression instanceof J.Identifier && "var".equals(((J.Identifier) typeExpression).getSimpleName());
+        boolean isNullAssigment = initializer instanceof J.Literal l && l.getValue() == null;
+        boolean alreadyUseVar = typeExpression instanceof J.Identifier i && "var".equals(i.getSimpleName());
         return !isNullAssigment && !alreadyUseVar;
     }
 
@@ -107,14 +107,14 @@ final class DeclarationCheck {
             return true;
         }
 
-        Expression initializer = vd.getVariables().get(0).getInitializer();
+        Expression initializer = vd.getVariables().getFirst().getInitializer();
         if (initializer == null) {
             return false;
         }
         initializer = initializer.unwrap();
 
-        return initializer instanceof J.NewClass
-               && ((J.NewClass) initializer).getClazz() instanceof J.ParameterizedType;
+        return initializer instanceof J.NewClass nc
+               && nc.getClazz() instanceof J.ParameterizedType;
     }
 
     /**
@@ -124,7 +124,7 @@ final class DeclarationCheck {
      * @return true iff the ternary operator is used in the initialization
      */
     public static boolean initializedByTernary(J.VariableDeclarations vd) {
-        Expression initializer = vd.getVariables().get(0).getInitializer();
+        Expression initializer = vd.getVariables().getFirst().getInitializer();
         return initializer != null && initializer.unwrap() instanceof J.Ternary;
     }
 

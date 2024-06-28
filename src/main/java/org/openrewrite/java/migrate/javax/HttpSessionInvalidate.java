@@ -76,7 +76,7 @@ public class HttpSessionInvalidate extends Recipe {
                             method = logoutTemplate.apply(
                                     getCursor(),
                                     method.getCoordinates().replace(),
-                                    httpServletRequestDeclaration.getVariables().get(0)
+                                    httpServletRequestDeclaration.getVariables().getFirst()
                             );
                         }
                         return super.visitMethodInvocation(method, ctx);

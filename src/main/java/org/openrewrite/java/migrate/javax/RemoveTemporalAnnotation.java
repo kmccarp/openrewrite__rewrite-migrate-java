@@ -58,9 +58,11 @@ public class RemoveTemporalAnnotation extends Recipe {
 
     @Override
     public String getDescription() {
-        return "OpenJPA persists the fields of attributes of type `java.sql.Date`, `java.sql.Time`, or `java.sql.Timestamp` " +
-               "that have a `javax.persistence.Temporal` annotation, whereas EclipseLink throws an exception. " +
-               "Remove the `@Temporal` annotation so the behavior in EclipseLink will match the behavior in OpenJPA.";
+        return """
+               OpenJPA persists the fields of attributes of type `java.sql.Date`, `java.sql.Time`, or `java.sql.Timestamp` \
+               that have a `javax.persistence.Temporal` annotation, whereas EclipseLink throws an exception. \
+               Remove the `@Temporal` annotation so the behavior in EclipseLink will match the behavior in OpenJPA.\
+               """;
     }
 
     @Override
@@ -105,7 +107,7 @@ public class RemoveTemporalAnnotation extends Recipe {
 
                         // Get TemporalType
                         J.Annotation temporal = temporalAnnos.iterator().next();
-                        String temporalArg = temporal.getArguments().iterator().next().toString();
+                        String temporalArg = temporal.getArguments().getFirst().toString();
                         Matcher temporalMatch = temporalPattern.matcher(temporalArg);
                         if (!temporalMatch.find()) {
                             return multiVariable;

@@ -47,7 +47,7 @@ public class UpdateAddAnnotatedTypes extends Recipe {
                             .build()
                             .apply(updateCursor(method),
                                     method.getCoordinates().replaceArguments(),
-                                    method.getArguments().get(0));
+                                    method.getArguments().getFirst());
                 }
                 return super.visitMethodInvocation(method, ctx);
             }

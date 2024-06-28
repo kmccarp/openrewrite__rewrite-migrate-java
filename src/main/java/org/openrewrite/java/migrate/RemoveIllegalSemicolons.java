@@ -32,8 +32,10 @@ public class RemoveIllegalSemicolons extends Recipe {
     @Override
     public String getDescription() {
         //language=markdown
-        return "Remove semicolons after package declarations and imports, no longer accepted in Java 21 as of " +
-               "[JDK-8027682](https://bugs.openjdk.org/browse/JDK-8027682).";
+        return """
+               Remove semicolons after package declarations and imports, no longer accepted in Java 21 as of \
+               [JDK-8027682](https://bugs.openjdk.org/browse/JDK-8027682).\
+               """;
     }
 
     @Override

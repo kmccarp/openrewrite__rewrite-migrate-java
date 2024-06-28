@@ -42,10 +42,12 @@ public class AddColumnAnnotation extends Recipe {
 
     @Override
     public String getDescription() {
-        return "When an attribute is annotated with `@ElementCollection`, a separate table is created for the attribute that includes the attribute \n" +
-               "ID and value. In OpenJPA, the column for the annotated attribute is named element, whereas EclipseLink names the column based on \n" +
-               "the name of the attribute. To remain compatible with tables that were created with OpenJPA, add a `@Column` annotation with the name \n" +
-               "attribute set to element.";
+        return """
+               When an attribute is annotated with `@ElementCollection`, a separate table is created for the attribute that includes the attribute\s
+               ID and value. In OpenJPA, the column for the annotated attribute is named element, whereas EclipseLink names the column based on\s
+               the name of the attribute. To remain compatible with tables that were created with OpenJPA, add a `@Column` annotation with the name\s
+               attribute set to element.\
+               """;
     }
 
     @Override

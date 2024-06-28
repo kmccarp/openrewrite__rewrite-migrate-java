@@ -56,7 +56,7 @@ public class MigrateDriverManagerSetLogStream extends Recipe {
                     m = m.withName(m.getName().withSimpleName("setLogWriter"));
                     m = JavaTemplate.builder("new java.io.PrintWriter(#{any(java.io.PrintStream)})")
                             .build()
-                            .apply(updateCursor(m), m.getCoordinates().replaceArguments(), m.getArguments().get(0));
+                            .apply(updateCursor(m), m.getCoordinates().replaceArguments(), m.getArguments().getFirst());
                 }
                 return m;
             }

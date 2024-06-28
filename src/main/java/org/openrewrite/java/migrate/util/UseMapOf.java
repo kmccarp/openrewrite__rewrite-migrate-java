@@ -55,13 +55,12 @@ public class UseMapOf extends Recipe {
                 J.Block body = n.getBody();
                 if (NEW_HASH_MAP.matches(n) && body != null) {
                     if (body.getStatements().size() == 1) {
-                        Statement statement = body.getStatements().get(0);
-                        if (statement instanceof J.Block) {
+                        Statement statement = body.getStatements().getFirst();
+                        if (statement instanceof J.Block block) {
                             List<Expression> args = new ArrayList<>();
                             StringJoiner mapOf = new StringJoiner(", ", "Map.of(", ")");
-                            for (Statement stat : ((J.Block) statement).getStatements()) {
-                                if (stat instanceof J.MethodInvocation && MAP_PUT.matches((Expression) stat)) {
-                                    J.MethodInvocation put = (J.MethodInvocation) stat;
+                            for (Statement stat : block.getStatements()) {
+                                if (stat instanceof J.MethodInvocation put && MAP_PUT.matches(put)) {
                                     args.addAll(put.getArguments());
                                     mapOf.add("#{}");
                                     mapOf.add("#{}");

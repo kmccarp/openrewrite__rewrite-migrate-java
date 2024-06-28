@@ -44,8 +44,10 @@ public class UseVarForObject extends Recipe {
     @Override
     public String getDescription() {
         //language=markdown
-        return "Try to apply local variable type inference `var` to variables containing Objects where possible. " +
-               "This recipe will not touch variable declarations with generics or initializers containing ternary operators.";
+        return """
+               Try to apply local variable type inference `var` to variables containing Objects where possible. \
+               This recipe will not touch variable declarations with generics or initializers containing ternary operators.\
+               """;
     }
 
 
@@ -89,8 +91,8 @@ public class UseVarForObject extends Recipe {
 
 
         private J.VariableDeclarations transformToVar(J.VariableDeclarations vd) {
-            Expression initializer = vd.getVariables().get(0).getInitializer();
-            String simpleName = vd.getVariables().get(0).getSimpleName();
+            Expression initializer = vd.getVariables().getFirst().getInitializer();
+            String simpleName = vd.getVariables().getFirst().getSimpleName();
 
             if (vd.getModifiers().isEmpty()) {
                 return template.apply(getCursor(), vd.getCoordinates().replace(), simpleName, initializer)

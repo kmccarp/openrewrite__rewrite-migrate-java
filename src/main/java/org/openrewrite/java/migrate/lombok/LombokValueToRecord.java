@@ -155,8 +155,8 @@ public class LombokValueToRecord extends ScanningRecipe<Map<String, Set<String>>
             }
             return classDeclarationImplements.stream().anyMatch(implemented -> {
                 JavaType type = implemented.getType();
-                if (type instanceof JavaType.FullyQualified) {
-                    return isConflictingInterface((JavaType.FullyQualified) type, memberVariableNames);
+                if (type instanceof JavaType.FullyQualified qualified) {
+                    return isConflictingInterface(qualified, memberVariableNames);
                 } else {
                     return false;
                 }
@@ -187,7 +187,7 @@ public class LombokValueToRecord extends ScanningRecipe<Map<String, Set<String>>
             // Inner classes need to be static
             if (getCursor().getParent() != null) {
                 Object parentValue = getCursor().getParent().getValue();
-                if (parentValue instanceof J.ClassDeclaration || (parentValue instanceof JRightPadded && ((JRightPadded) parentValue).getElement() instanceof J.ClassDeclaration)) {
+                if (parentValue instanceof J.ClassDeclaration || (parentValue instanceof JRightPadded<?> padded && padded.getElement() instanceof J.ClassDeclaration)) {
                     if (classDeclaration.getModifiers().stream().noneMatch(mod -> mod.getType() == J.Modifier.Type.Static)) {
                         return true;
                     }
@@ -314,7 +314,7 @@ public class LombokValueToRecord extends ScanningRecipe<Map<String, Set<String>>
         private static String memberVariablesToString(Set<String> memberVariables) {
             return memberVariables
                     .stream()
-                    .map(member -> String.format(TO_STRING_MEMBER_LINE_PATTERN, member, member))
+                    .map(member -> TO_STRING_MEMBER_LINE_PATTERN.formatted( member, member ))
                     .collect(Collectors.joining(TO_STRING_MEMBER_DELIMITER));
         }
 

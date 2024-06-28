@@ -69,7 +69,7 @@ public class NoGuavaMapsNewHashMap extends Recipe {
                             .contextSensitive()
                             .imports("java.util.HashMap")
                             .build()
-                            .apply(getCursor(), method.getCoordinates().replace(), method.getArguments().get(0));
+                            .apply(getCursor(), method.getCoordinates().replace(), method.getArguments().getFirst());
                 }
                 return super.visitMethodInvocation(method, ctx);
             }

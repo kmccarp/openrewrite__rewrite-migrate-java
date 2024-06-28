@@ -74,7 +74,7 @@ public class LombokValToFinalVar extends Recipe {
             if (TypeUtils.isOfClassType(varDecls.getType(), LOMBOK_VAL)) {
                 maybeRemoveImport(LOMBOK_VAL);
 
-                J.VariableDeclarations.NamedVariable nv = mv.getVariables().get(0);
+                J.VariableDeclarations.NamedVariable nv = mv.getVariables().getFirst();
                 String finalVarVariableTemplateString;
                 Object[] args;
                 if (nv.getInitializer() == null) {

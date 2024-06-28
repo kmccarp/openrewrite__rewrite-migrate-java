@@ -34,9 +34,11 @@ public class AddDefaultConstructorToEntityClass extends Recipe {
 
     @Override
     public String getDescription() {
-        return "When a Java Persistence API (JPA) entity class has a constructor with arguments, the class must also " +
-               "have a default, no-argument constructor. The OpenJPA implementation automatically generates the " +
-               "no-argument constructor, but the EclipseLink implementation does not.";
+        return """
+               When a Java Persistence API (JPA) entity class has a constructor with arguments, the class must also \
+               have a default, no-argument constructor. The OpenJPA implementation automatically generates the \
+               no-argument constructor, but the EclipseLink implementation does not.\
+               """;
     }
 
     @Override
@@ -59,7 +61,7 @@ public class AddDefaultConstructorToEntityClass extends Recipe {
                                 .filter(statement -> statement instanceof J.MethodDeclaration)
                                 .map(J.MethodDeclaration.class::cast)
                                 .filter(J.MethodDeclaration::isConstructor)
-                                .anyMatch(constructor -> constructor.getParameters().get(0) instanceof J.Empty)) {
+                                .anyMatch(constructor -> constructor.getParameters().getFirst() instanceof J.Empty)) {
                             return classDecl;
                         }
 

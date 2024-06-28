@@ -59,7 +59,7 @@ public class MigrateClassLoaderDefineClass extends Recipe {
                     m = template.apply(
                             updateCursor(m),
                             m.getCoordinates().replaceArguments(),
-                            m.getArguments().get(0),
+                            m.getArguments().getFirst(),
                             m.getArguments().get(1),
                             m.getArguments().get(2));
                 }

@@ -55,8 +55,7 @@ public class OptionalNotEmptyToIsPresent extends Recipe {
         return Preconditions.check(check, new JavaVisitor<ExecutionContext>() {
             @Override
             public J visitStatement(Statement s, ExecutionContext ctx) {
-                if (s instanceof J.Unary) {
-                    J.Unary unary = (J.Unary) s;
+                if (s instanceof J.Unary unary) {
                     if (unary.getOperator() == Type.Not && optionalIsPresentMatcher.matches(unary.getExpression())) {
                         return JavaTemplate.apply("#{any(java.util.Optional)}.isPresent()",
                                 getCursor(),

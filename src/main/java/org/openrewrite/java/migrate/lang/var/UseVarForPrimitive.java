@@ -29,8 +29,6 @@ import org.openrewrite.java.tree.Expression;
 import org.openrewrite.java.tree.J;
 import org.openrewrite.java.tree.JavaType;
 
-import static java.lang.String.format;
-
 @Value
 @EqualsAndHashCode(callSuper = false)
 public class UseVarForPrimitive extends Recipe {
@@ -45,8 +43,10 @@ public class UseVarForPrimitive extends Recipe {
     @Override
     public String getDescription() {
         //language=markdown
-        return "Try to apply local variable type inference `var` to primitive variables where possible. " +
-               "This recipe will not touch variable declarations with initializers containing ternary operators.";
+        return """
+               Try to apply local variable type inference `var` to primitive variables where possible. \
+               This recipe will not touch variable declarations with initializers containing ternary operators.\
+               """;
     }
 
 
@@ -90,8 +90,8 @@ public class UseVarForPrimitive extends Recipe {
 
 
         private J.VariableDeclarations transformToVar(J.VariableDeclarations vd) {
-            Expression initializer = vd.getVariables().get(0).getInitializer();
-            String simpleName = vd.getVariables().get(0).getSimpleName();
+            Expression initializer = vd.getVariables().getFirst().getInitializer();
+            String simpleName = vd.getVariables().getFirst().getSimpleName();
 
             if (initializer instanceof J.Literal) {
                 initializer = expandWithPrimitivTypeHint(vd, initializer);
@@ -134,7 +134,7 @@ public class UseVarForPrimitive extends Recipe {
             }
 
             if (typNotation != null) {
-                initializer = ((J.Literal) initializer).withValueSource(format("%s%s", valueSource, typNotation));
+                initializer = ((J.Literal) initializer).withValueSource("%s%s".formatted( valueSource, typNotation ));
             }
 
             return initializer;

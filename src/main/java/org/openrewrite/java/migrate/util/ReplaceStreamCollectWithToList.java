@@ -42,8 +42,10 @@ public class ReplaceStreamCollectWithToList extends Recipe {
     private static final MethodMatcher COLLECT_TO_LIST = new MethodMatcher("java.util.stream.Collectors toList()");
 
     @Option(displayName = "Convert mutable `Collectors.toList()` to immutable",
-            description = "Also replace `Stream.collect(Collectors.toList())` with `Stream.toList()`. " +
-                          "*BEWARE*: Attempts to modify the returned list, result in an `UnsupportedOperationException`!",
+            description = """
+                          Also replace `Stream.collect(Collectors.toList())` with `Stream.toList()`. \
+                          *BEWARE*: Attempts to modify the returned list, result in an `UnsupportedOperationException`!\
+                          """,
             required = false)
     @Nullable
     Boolean convertToList;
@@ -55,8 +57,10 @@ public class ReplaceStreamCollectWithToList extends Recipe {
 
     @Override
     public String getDescription() {
-        return "Replace `Stream.collect(Collectors.toUnmodifiableList())` with Java 16+ `Stream.toList()`. " +
-               "Also replaces `Stream.collect(Collectors.toList())` if `convertToList` is set to `true`.";
+        return """
+               Replace `Stream.collect(Collectors.toUnmodifiableList())` with Java 16+ `Stream.toList()`. \
+               Also replaces `Stream.collect(Collectors.toList())` if `convertToList` is set to `true`.\
+               """;
     }
 
     @Override
@@ -95,7 +99,7 @@ public class ReplaceStreamCollectWithToList extends Recipe {
             if (!STREAM_COLLECT.matches(method)) {
                 return result;
             }
-            Expression command = method.getArguments().get(0);
+            Expression command = method.getArguments().getFirst();
             if (COLLECT_TO_UNMODIFIABLE_LIST.matches(command)
                 || convertToList && COLLECT_TO_LIST.matches(command)) {
                 maybeRemoveImport("java.util.stream.Collectors");

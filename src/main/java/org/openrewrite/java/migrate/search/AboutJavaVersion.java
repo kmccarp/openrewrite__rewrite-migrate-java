@@ -51,8 +51,10 @@ public class AboutJavaVersion extends Recipe {
 
     @Override
     public String getDescription() {
-        return "A diagnostic for studying the distribution of Java language version levels " +
-               "(both source and target compatibility across files and source sets).";
+        return """
+               A diagnostic for studying the distribution of Java language version levels \
+               (both source and target compatibility across files and source sets).\
+               """;
     }
 
     @Override

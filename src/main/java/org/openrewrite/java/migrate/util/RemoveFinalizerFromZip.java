@@ -81,7 +81,7 @@ public class RemoveFinalizerFromZip extends Recipe {
                                         return null;
                                     }
                                     if (sideEffects.size() == 1) {
-                                        return sideEffects.get(0).withPrefix(mi.getPrefix());
+                                        return sideEffects.getFirst().withPrefix(mi.getPrefix());
                                     }
                                 }
                             }

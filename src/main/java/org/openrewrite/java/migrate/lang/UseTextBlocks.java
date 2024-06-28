@@ -46,8 +46,10 @@ import static org.openrewrite.Tree.randomId;
 @EqualsAndHashCode(callSuper = false)
 public class UseTextBlocks extends Recipe {
     @Option(displayName = "Whether to convert strings without newlines (the default value is true).",
-            description = "Whether or not strings without newlines should be converted to text block when processing code. " +
-                          "The default value is true.",
+            description = """
+                          Whether or not strings without newlines should be converted to text block when processing code. \
+                          The default value is true.\
+                          """,
             example = "true",
             required = false)
     @Nullable
@@ -175,23 +177,22 @@ public class UseTextBlocks extends Recipe {
                 }
 
                 return new J.Literal(randomId(), binary.getPrefix(), Markers.EMPTY, originalContent.toString(),
-                        String.format("\"\"\"%s\"\"\"", content), null, JavaType.Primitive.String);
+                        "\"\"\"%s\"\"\"".formatted( content ), null, JavaType.Primitive.String);
             }
         });
     }
 
     private static boolean allLiterals(Expression exp) {
-        return isRegularStringLiteral(exp) || exp instanceof J.Binary
-                                              && ((J.Binary) exp).getOperator() == J.Binary.Type.Addition
-                                              && allLiterals(((J.Binary) exp).getLeft()) && allLiterals(((J.Binary) exp).getRight());
+        return isRegularStringLiteral(exp) || exp instanceof J.Binary b
+                                              && b.getOperator() == J.Binary.Type.Addition
+                                              && allLiterals(b.getLeft()) && allLiterals(b.getRight());
     }
 
     private static boolean flatAdditiveStringLiterals(Expression expression,
                                                       List<J.Literal> stringLiterals,
                                                       StringBuilder contentSb,
                                                       StringBuilder concatenationSb) {
-        if (expression instanceof J.Binary) {
-            J.Binary b = (J.Binary) expression;
+        if (expression instanceof J.Binary b) {
             if (b.getOperator() != J.Binary.Type.Addition) {
                 return false;
             }
@@ -211,8 +212,7 @@ public class UseTextBlocks extends Recipe {
     }
 
     private static boolean isRegularStringLiteral(Expression expr) {
-        if (expr instanceof J.Literal) {
-            J.Literal l = (J.Literal) expr;
+        if (expr instanceof J.Literal l) {
             return TypeUtils.isString(l.getType()) &&
                    l.getValueSource() != null &&
                    !l.getValueSource().startsWith("\"\"\"");

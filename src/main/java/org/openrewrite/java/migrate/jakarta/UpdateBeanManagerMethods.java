@@ -51,7 +51,7 @@ public class UpdateBeanManagerMethods extends Recipe {
                             .apply(updateCursor(mi),
                                     mi.getCoordinates().replace(),
                                     mi.getSelect(),
-                                    mi.getArguments().get(0));
+                                    mi.getArguments().getFirst());
                 } else if (createInjectionTargetMatcher.matches(method)) {
                     return JavaTemplate.builder("#{any(jakarta.enterprise.inject.spi.BeanManager)}.getInjectionTargetFactory(#{any(jakarta.enterprise.inject.spi.AnnotatedType)}).createInjectionTarget(null)")
                             .javaParser(JavaParser.fromJavaVersion().classpathFromResources(ctx, "jakarta.enterprise.cdi-api-3.0.0-M4"))
@@ -59,7 +59,7 @@ public class UpdateBeanManagerMethods extends Recipe {
                             .apply(updateCursor(mi),
                                     mi.getCoordinates().replace(),
                                     mi.getSelect(),
-                                    mi.getArguments().get(0));
+                                    mi.getArguments().getFirst());
                 }
                 return mi;
             }

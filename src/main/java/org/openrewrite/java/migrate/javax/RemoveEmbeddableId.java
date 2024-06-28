@@ -40,10 +40,12 @@ public class RemoveEmbeddableId extends ScanningRecipe<RemoveEmbeddableId.Accumu
 
     @Override
     public String getDescription() {
-        return "According to the Java Persistence API (JPA) specification, if an entity defines an attribute with an " +
-               "`@EmbeddedId` annotation, the embeddable class cannot contain an attribute with an `@Id` annotation. " +
-               "If both the `@EmbeddedId` annotation and the `@Id` annotation are defined, " +
-               "OpenJPA ignores the `@Id` annotation, whereas EclipseLink throws an exception.";
+        return """
+               According to the Java Persistence API (JPA) specification, if an entity defines an attribute with an \
+               `@EmbeddedId` annotation, the embeddable class cannot contain an attribute with an `@Id` annotation. \
+               If both the `@EmbeddedId` annotation and the `@Id` annotation are defined, \
+               OpenJPA ignores the `@Id` annotation, whereas EclipseLink throws an exception.\
+               """;
     }
 
     @Override

@@ -53,9 +53,9 @@ public class MigrateCollectionsUnmodifiableList extends Recipe {
             public J visitMethodInvocation(J.MethodInvocation method, ExecutionContext ctx) {
                 J.MethodInvocation m = (J.MethodInvocation) super.visitMethodInvocation(method, ctx);
                 if (UNMODIFIABLE_LIST.matches(method)) {
-                    if (m.getArguments().get(0) instanceof J.MethodInvocation) {
-                        if (ARRAYS_AS_LIST.matches((J.MethodInvocation) m.getArguments().get(0))) {
-                            J.MethodInvocation arraysInvocation = (J.MethodInvocation) m.getArguments().get(0);
+                    if (m.getArguments().getFirst() instanceof J.MethodInvocation) {
+                        if (ARRAYS_AS_LIST.matches((J.MethodInvocation) m.getArguments().getFirst())) {
+                            J.MethodInvocation arraysInvocation = (J.MethodInvocation) m.getArguments().getFirst();
                             maybeRemoveImport("java.util.Collections");
                             maybeRemoveImport("java.util.Arrays");
                             maybeAddImport("java.util.List");

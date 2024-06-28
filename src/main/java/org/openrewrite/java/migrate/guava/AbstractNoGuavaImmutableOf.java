@@ -110,7 +110,7 @@ abstract class AbstractNoGuavaImmutableOf extends Recipe {
                             .build()
                             .apply(getCursor(),
                                     method.getCoordinates().replace(),
-                                    method.getArguments().get(0) instanceof J.Empty ? new Object[]{} : method.getArguments().toArray());
+                                    method.getArguments().getFirst() instanceof J.Empty ? new Object[]{} : method.getArguments().toArray());
                 }
                 return super.visitMethodInvocation(method, ctx);
             }
@@ -118,10 +118,9 @@ abstract class AbstractNoGuavaImmutableOf extends Recipe {
             private boolean isParentTypeDownCast() {
                 J parent = getCursor().dropParentUntil(J.class::isInstance).getValue();
                 boolean isParentTypeDownCast = false;
-                if (parent instanceof J.VariableDeclarations.NamedVariable) {
-                    isParentTypeDownCast = isParentTypeMatched(((J.VariableDeclarations.NamedVariable) parent).getType());
-                } else if (parent instanceof J.Assignment) {
-                    J.Assignment a = (J.Assignment) parent;
+                if (parent instanceof J.VariableDeclarations.NamedVariable variable) {
+                    isParentTypeDownCast = isParentTypeMatched(variable.getType());
+                } else if (parent instanceof J.Assignment a) {
                     if (a.getVariable() instanceof J.Identifier && ((J.Identifier) a.getVariable()).getFieldType() != null) {
                         isParentTypeDownCast = isParentTypeMatched(((J.Identifier) a.getVariable()).getFieldType().getType());
                     } else if (a.getVariable() instanceof J.FieldAccess) {
@@ -130,14 +129,13 @@ abstract class AbstractNoGuavaImmutableOf extends Recipe {
                 } else if (parent instanceof J.Return) {
                     // Does not currently support returns in lambda expressions.
                     J j = getCursor().dropParentUntil(is -> is instanceof J.MethodDeclaration || is instanceof J.CompilationUnit).getValue();
-                    if (j instanceof J.MethodDeclaration) {
-                        TypeTree returnType = ((J.MethodDeclaration) j).getReturnTypeExpression();
+                    if (j instanceof J.MethodDeclaration declaration) {
+                        TypeTree returnType = declaration.getReturnTypeExpression();
                         if (returnType != null) {
                             isParentTypeDownCast = isParentTypeMatched(returnType.getType());
                         }
                     }
-                } else if (parent instanceof J.MethodInvocation) {
-                    J.MethodInvocation m = (J.MethodInvocation) parent;
+                } else if (parent instanceof J.MethodInvocation m) {
                     if (m.getMethodType() != null) {
                         int index = 0;
                         for (Expression argument : m.getArguments()) {
@@ -148,8 +146,7 @@ abstract class AbstractNoGuavaImmutableOf extends Recipe {
                         }
                         isParentTypeDownCast = isParentTypeMatched(m.getMethodType().getParameterTypes().get(index));
                     }
-                } else if (parent instanceof J.NewClass) {
-                    J.NewClass c = (J.NewClass) parent;
+                } else if (parent instanceof J.NewClass c) {
                     int index = 0;
                     if (c.getConstructorType() != null) {
                         for (Expression argument : c.getArguments()) {
@@ -162,8 +159,7 @@ abstract class AbstractNoGuavaImmutableOf extends Recipe {
                             isParentTypeDownCast = isParentTypeMatched(c.getConstructorType().getParameterTypes().get(index));
                         }
                     }
-                } else if (parent instanceof J.NewArray) {
-                    J.NewArray a = (J.NewArray) parent;
+                } else if (parent instanceof J.NewArray a) {
                     JavaType arrayType = a.getType();
                     while (arrayType instanceof JavaType.Array) {
                         arrayType = ((JavaType.Array) arrayType).getElemType();

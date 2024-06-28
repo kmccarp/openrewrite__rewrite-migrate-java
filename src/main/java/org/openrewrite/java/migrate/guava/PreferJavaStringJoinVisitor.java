@@ -47,7 +47,7 @@ class PreferJavaStringJoinVisitor extends JavaIsoVisitor<ExecutionContext> {
 
         List<Expression> arguments = mi.getArguments();
         if (arguments.size() == 1) {
-            JavaType javaType = arguments.get(0).getType();
+            JavaType javaType = arguments.getFirst().getType();
 
             rewriteToJavaString = isCompatibleArray(javaType) || isCompatibleIterable(javaType);
         } else if (arguments.size() >= 2) {
@@ -65,7 +65,7 @@ class PreferJavaStringJoinVisitor extends JavaIsoVisitor<ExecutionContext> {
                     "String.join(#{any(java.lang.CharSequence)}",
                     getCursor(),
                     mi.getCoordinates().replace(),
-                    select.getArguments().get(0)
+                    select.getArguments().getFirst()
             ).withArguments(newArgs);
         }
         return mi;
@@ -76,16 +76,16 @@ class PreferJavaStringJoinVisitor extends JavaIsoVisitor<ExecutionContext> {
     }
 
     private boolean isCompatibleArray(@Nullable JavaType javaType) {
-        if (javaType instanceof JavaType.Array) {
-            return isCharSequence(((JavaType.Array) javaType).getElemType());
+        if (javaType instanceof JavaType.Array array) {
+            return isCharSequence(array.getElemType());
         }
         return false;
     }
 
     private boolean isCompatibleIterable(@Nullable JavaType javaType) {
-        if (isAssignableTo(Iterable.class.getName(), javaType) && javaType instanceof JavaType.Parameterized) {
-            List<JavaType> typeParameters = ((JavaType.Parameterized) javaType).getTypeParameters();
-            return typeParameters.size() == 1 && isCharSequence(typeParameters.get(0));
+        if (isAssignableTo(Iterable.class.getName(), javaType) && javaType instanceof JavaType.Parameterized parameterized) {
+            List<JavaType> typeParameters = parameterized.getTypeParameters();
+            return typeParameters.size() == 1 && isCharSequence(typeParameters.getFirst());
         }
         return false;
     }
@@ -97,7 +97,7 @@ class PreferJavaStringJoinVisitor extends JavaIsoVisitor<ExecutionContext> {
     private List<Expression> appendArguments(List<Expression> firstArgs, List<Expression> secondArgs) {
         ArrayList<Expression> args = new ArrayList<>(firstArgs);
         if (!secondArgs.isEmpty()) {
-            Expression e = secondArgs.remove(0);
+            Expression e = secondArgs.removeFirst();
             args.add(e.withPrefix(e.getPrefix().withWhitespace(" ")));
             args.addAll(secondArgs);
         }

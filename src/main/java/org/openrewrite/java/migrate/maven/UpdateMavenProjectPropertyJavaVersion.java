@@ -61,16 +61,20 @@ public class UpdateMavenProjectPropertyJavaVersion extends Recipe {
     @Override
     public String getDescription() {
         //language=markdown
-        return "The Java version is determined by several project properties, including:\n\n" +
-               " * `java.version`\n" +
-               " * `jdk.version`\n" +
-               " * `javaVersion`\n" +
-               " * `jdkVersion`\n" +
-               " * `maven.compiler.source`\n" +
-               " * `maven.compiler.target`\n" +
-               " * `maven.compiler.release`\n" +
-               " * `release.version`\n\n" +
-               " These project properties are not added if they are not currently set, but only updated in place.";
+        return """
+               The Java version is determined by several project properties, including:
+               
+                * `java.version`
+                * `jdk.version`
+                * `javaVersion`
+                * `jdkVersion`
+                * `maven.compiler.source`
+                * `maven.compiler.target`
+                * `maven.compiler.release`
+                * `release.version`
+               
+                These project properties are not added if they are not currently set, but only updated in place.\
+               """;
     }
 
     @Override
@@ -124,7 +128,7 @@ public class UpdateMavenProjectPropertyJavaVersion extends Recipe {
                             }
                     );
 
-                    if (!maybeVersion.isPresent()) {
+                    if (maybeVersion.isEmpty()) {
                         return tag;
                     }
                     float currentVersion = maybeVersion.get();

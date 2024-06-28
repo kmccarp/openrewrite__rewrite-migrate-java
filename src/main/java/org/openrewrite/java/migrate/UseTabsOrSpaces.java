@@ -42,8 +42,10 @@ public class UseTabsOrSpaces extends Recipe {
 
     @Override
     public String getDescription() {
-        return "This is useful for one-off migrations of a codebase that has mixed indentation styles, while " +
-               "preserving all other auto-detected formatting rules.";
+        return """
+               This is useful for one-off migrations of a codebase that has mixed indentation styles, while \
+               preserving all other auto-detected formatting rules.\
+               """;
     }
 
     @Override

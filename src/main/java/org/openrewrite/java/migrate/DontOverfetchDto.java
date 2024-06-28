@@ -57,8 +57,10 @@ public class DontOverfetchDto extends Recipe {
 
     @Override
     public String getDescription() {
-        return "Replace method parameters that have DTOs with their " +
-               "data elements when only the specified data element is used.";
+        return """
+               Replace method parameters that have DTOs with their \
+               data elements when only the specified data element is used.\
+               """;
     }
 
     @Override
@@ -77,9 +79,8 @@ public class DontOverfetchDto extends Recipe {
                         AtomicReference<JavaType.FullyQualified> memberTypeAtomic = new AtomicReference<>();
 
                         m = m.withParameters(ListUtils.map(m.getParameters(), p -> {
-                            if (p instanceof J.VariableDeclarations) {
-                                J.VariableDeclarations v = (J.VariableDeclarations) p;
-                                if (v.getVariables().get(0).getSimpleName().equals(dtoVariableName)) {
+                            if (p instanceof J.VariableDeclarations v) {
+                                if (v.getVariables().getFirst().getSimpleName().equals(dtoVariableName)) {
                                     JavaType.FullyQualified dtoType = v.getTypeAsFullyQualified();
                                     if (dtoType != null) {
                                         for (JavaType.Variable member : dtoType.getMembers()) {

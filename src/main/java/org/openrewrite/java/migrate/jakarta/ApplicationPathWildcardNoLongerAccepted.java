@@ -53,9 +53,8 @@ public class ApplicationPathWildcardNoLongerAccepted extends Recipe {
                 return a;
             }
 
-            Expression it = a.getArguments().get(0);
-            if (it instanceof J.Assignment) {
-                J.Assignment assig = (J.Assignment) it;
+            Expression it = a.getArguments().getFirst();
+            if (it instanceof J.Assignment assig) {
                 if (assig.getAssignment() instanceof J.Literal) {
                     J.Literal literal = (J.Literal) assig.getAssignment();
                     String value = literal.getValue().toString();
@@ -64,12 +63,11 @@ public class ApplicationPathWildcardNoLongerAccepted extends Recipe {
                         return a.withArguments(Collections.singletonList(assig.withAssignment(literal.withValue(newValue).withValueSource(newValue))));
                     }
                 } // Should we handle constants?
-            } else if (it instanceof J.Literal) {
-                J.Literal literal = (J.Literal) it;
+            } else if (it instanceof J.Literal literal) {
                 String value = literal.getValue().toString();
                 if (value.endsWith("/*")) {
                     String newValue = "\"" + value.substring(0, value.length() - 2) + "\"";
-                    return a.withArguments(Collections.singletonList(((J.Literal) it).withValue(newValue).withValueSource(newValue)));
+                    return a.withArguments(Collections.singletonList(literal.withValue(newValue).withValueSource(newValue)));
                 }
             }
 

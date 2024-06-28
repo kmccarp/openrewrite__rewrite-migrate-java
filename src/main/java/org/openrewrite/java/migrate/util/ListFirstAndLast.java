@@ -88,7 +88,7 @@ public class ListFirstAndLast extends Recipe {
             // XXX Maybe handle J.FieldAccess explicitly as well to support *Last on fields too
 
             // For anything else support limited cases, as we can't guarantee the same reference for the collection
-            if (J.Literal.isLiteralValue(mi.getArguments().get(0), 0)) {
+            if (J.Literal.isLiteralValue(mi.getArguments().getFirst(), 0)) {
                 return getMethodInvocation(mi, operation, "First");
             }
 
@@ -97,7 +97,7 @@ public class ListFirstAndLast extends Recipe {
 
         private static J.MethodInvocation handleSelectIdentifier(J.Identifier sequencedCollection, J.MethodInvocation mi, String operation) {
             final String firstOrLast;
-            Expression expression = mi.getArguments().get(0);
+            Expression expression = mi.getArguments().getFirst();
             if (J.Literal.isLiteralValue(expression, 0)) {
                 firstOrLast = "First";
             } else if (!"add".equals(operation) && lastElementOfSequencedCollection(sequencedCollection, expression)) {
@@ -135,14 +135,13 @@ public class ListFirstAndLast extends Recipe {
          * @return true, if we're calling `sequencedCollection.size() - 1` in expression on the same collection
          */
         private static boolean lastElementOfSequencedCollection(J.Identifier sequencedCollection, Expression expression) {
-            if (expression instanceof J.Binary) {
-                J.Binary binary = (J.Binary) expression;
+            if (expression instanceof J.Binary binary) {
                 if (binary.getOperator() == J.Binary.Type.Subtraction
                     && J.Literal.isLiteralValue(binary.getRight(), 1)
                     && SIZE_MATCHER.matches(binary.getLeft())) {
                     Expression sizeSelect = ((J.MethodInvocation) binary.getLeft()).getSelect();
-                    if (sizeSelect instanceof J.Identifier) {
-                        return sequencedCollection.getSimpleName().equals(((J.Identifier) sizeSelect).getSimpleName());
+                    if (sizeSelect instanceof J.Identifier identifier) {
+                        return sequencedCollection.getSimpleName().equals(identifier.getSimpleName());
                     }
                 }
             }

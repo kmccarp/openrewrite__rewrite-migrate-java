@@ -41,11 +41,13 @@ public class AddTransientAnnotationToCollections extends Recipe {
 
     @Override
     public String getDescription() {
-        return "In OpenJPA, attributes that inherit from the `java.util.Collection<E>` interface are not a default " +
-               "persistent type, so these attributes are not persisted unless they are annotated. EclipseLink has a " +
-               "different default behavior and attempts to persist these attributes to the database. To keep the OpenJPA " +
-               "behavior of ignoring unannotated collection attributes, add the `javax.persistence.Transient` annotation " +
-               "to these attributes in EclipseLink.";
+        return """
+               In OpenJPA, attributes that inherit from the `java.util.Collection<E>` interface are not a default \
+               persistent type, so these attributes are not persisted unless they are annotated. EclipseLink has a \
+               different default behavior and attempts to persist these attributes to the database. To keep the OpenJPA \
+               behavior of ignoring unannotated collection attributes, add the `javax.persistence.Transient` annotation \
+               to these attributes in EclipseLink.\
+               """;
     }
 
     @Override

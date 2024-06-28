@@ -62,7 +62,7 @@ public class UseEnumSetOf extends Recipe {
                     Cursor parent = getCursor().dropParentUntil(is -> is instanceof J.Assignment || is instanceof J.VariableDeclarations || is instanceof J.Block);
                     if (!(parent.getValue() instanceof J.Block)) {
                         JavaType type = parent.getValue() instanceof J.Assignment ?
-                                ((J.Assignment) parent.getValue()).getType() : ((J.VariableDeclarations) parent.getValue()).getVariables().get(0).getType();
+                                ((J.Assignment) parent.getValue()).getType() : ((J.VariableDeclarations) parent.getValue()).getVariables().getFirst().getType();
                         if (isAssignmentSetOfEnum(type)) {
                             maybeAddImport("java.util.EnumSet");
 
@@ -82,10 +82,9 @@ public class UseEnumSetOf extends Recipe {
             }
 
             private boolean isAssignmentSetOfEnum(@Nullable JavaType type) {
-                if (type instanceof JavaType.Parameterized) {
-                    JavaType.Parameterized parameterized = (JavaType.Parameterized) type;
+                if (type instanceof JavaType.Parameterized parameterized) {
                     if (TypeUtils.isOfClassType(parameterized.getType(), "java.util.Set")) {
-                        return ((JavaType.Parameterized) type).getTypeParameters().stream()
+                        return parameterized.getTypeParameters().stream()
                                 .filter(org.openrewrite.java.tree.JavaType.Class.class::isInstance)
                                 .map(org.openrewrite.java.tree.JavaType.Class.class::cast)
                                 .anyMatch(o -> o.getKind() == JavaType.FullyQualified.Kind.Enum);

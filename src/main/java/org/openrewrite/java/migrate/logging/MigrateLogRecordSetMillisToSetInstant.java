@@ -63,7 +63,7 @@ public class MigrateLogRecordSetMillisToSetInstant extends Recipe {
                             .build()
                             .apply(updateCursor(m),
                                     m.getCoordinates().replaceArguments(),
-                                    m.getArguments().get(0));
+                                    m.getArguments().getFirst());
                     maybeAddImport("java.time.Instant");
                 }
                 return super.visitMethodInvocation(m, ctx);

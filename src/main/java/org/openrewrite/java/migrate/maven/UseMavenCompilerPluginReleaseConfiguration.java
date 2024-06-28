@@ -50,8 +50,10 @@ public class UseMavenCompilerPluginReleaseConfiguration extends Recipe {
 
     @Override
     public String getDescription() {
-        return "Replaces any explicit `source` or `target` configuration (if present) on the `maven-compiler-plugin` with " +
-                "`release`, and updates the `release` value if needed. Will not downgrade the Java version if the current version is higher.";
+        return """
+                Replaces any explicit `source` or `target` configuration (if present) on the `maven-compiler-plugin` with \
+                `release`, and updates the `release` value if needed. Will not downgrade the Java version if the current version is higher.\
+                """;
     }
 
     @Override
@@ -71,16 +73,16 @@ public class UseMavenCompilerPluginReleaseConfiguration extends Recipe {
                         .findAny();
                 Optional<Xml.Tag> maybeCompilerPluginConfig = maybeCompilerPlugin
                         .flatMap(it -> it.getChild("configuration"));
-                if (!maybeCompilerPluginConfig.isPresent()) {
+                if (maybeCompilerPluginConfig.isEmpty()) {
                     return t;
                 }
                 Xml.Tag compilerPluginConfig = maybeCompilerPluginConfig.get();
                 Optional<String> source = compilerPluginConfig.getChildValue("source");
                 Optional<String> target = compilerPluginConfig.getChildValue("target");
                 Optional<String> release = compilerPluginConfig.getChildValue("release");
-                if (!source.isPresent()
-                        && !target.isPresent()
-                        && !release.isPresent()
+                if (source.isEmpty()
+                        && target.isEmpty()
+                        && release.isEmpty()
                         || currentNewerThanProposed(release)) {
                     return t;
                 }
@@ -103,7 +105,7 @@ public class UseMavenCompilerPluginReleaseConfiguration extends Recipe {
     }
 
     private boolean currentNewerThanProposed(@SuppressWarnings("OptionalUsedAsFieldOrParameterType") Optional<String> maybeRelease) {
-        if (!maybeRelease.isPresent()) {
+        if (maybeRelease.isEmpty()) {
             return false;
         }
         try {
